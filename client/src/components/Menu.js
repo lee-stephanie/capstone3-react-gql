@@ -13,11 +13,11 @@ const Menu = props => {
 				</Nav>
 				<Nav>
 					<NavDropdown title="Member" id="collasible-nav-dropdown">
-						<NavDropdown.Item href="#action/3.1">
+						<NavDropdown.Item href="/MemberDatabase">
 							Database
 						</NavDropdown.Item>
 						<NavDropdown.Divider />
-						<NavDropdown.Item href="#action/3.1">
+						<NavDropdown.Item href="/addmember">
 							Add Member
 						</NavDropdown.Item>
 						<NavDropdown.Item href="#action/3.1">
