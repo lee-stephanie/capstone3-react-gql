@@ -3,6 +3,16 @@ import { Table, Popover, OverlayTrigger, Button } from "react-bootstrap";
 
 import AddMember from "./addmember";
 
+//lodash to use compose
+
+import { flowRight as compose } from "lodash";
+
+//ApolloServer
+import { graphql } from "react-apollo";
+
+//import the query
+import { getMembersQuery } from "../../queries/queries";
+
 const popover = (
 	<Popover id="popover-basic">
 		<Popover.Content>
@@ -20,6 +30,13 @@ const popoverB = (
 );
 
 const MemberDatabase = props => {
+	/*	console.log(props);*/
+
+	//retrieve the data
+	const memberData = props.getMembersQuery.getMembers
+		? props.getMembersQuery.getMembers
+		: [];
+
 	return (
 		<div>
 			<Table striped borderless hover responsive="sm" variant="dark">
@@ -37,300 +54,53 @@ const MemberDatabase = props => {
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>2</td>
-						<td>Dec 5, 2019</td>
-						<td>Orlando</td>
-						<td>Orlando</td>
-						<td>Bloom</td>
-						<td>Dec 1, 2019</td>
-						<td>2222222</td>
-						<td>orlando@bloom.com</td>
+					{memberData.map(member => {
+						/*	console.log(member.birthday);*/
+						return (
+							<tr key="member.id">
+								<td>2</td>
+								<td>{member.memberSince}</td>
+								<td>{member.nickName}</td>
+								<td>{member.firstName}</td>
+								<td>{member.lastName}</td>
+								<td>{member.birthday}</td>
+								<td>{member.contact}</td>
+								<td>{member.email}</td>
 
-						{/*crud*/}
-						<td>
-							<OverlayTrigger
-								trigger="hover"
-								placement="top"
-								overlay={popover}
-							>
-								<Button variant="success">
-									<i class="fas fa-user-edit"></i>
-								</Button>
-							</OverlayTrigger>
-						</td>
-						<td>
-							<OverlayTrigger
-								trigger="hover"
-								placement="top"
-								overlay={popoverB}
-							>
-								<Button variant="danger">
-									<i class="fas fa-user-minus"></i>
-								</Button>
-							</OverlayTrigger>
-						</td>
-						<td>
-							<AddMember />
-						</td>
-					</tr>
-					<tr>
-						<td>2</td>
-						<td>Dec 5, 2019</td>
-						<td>Orlando</td>
-						<td>Orlando</td>
-						<td>Bloom</td>
-						<td>Dec 1, 2019</td>
-						<td>2222222</td>
-						<td>orlando@bloom.com</td>
-
-						{/*crud*/}
-						<td>
-							<OverlayTrigger
-								trigger="hover"
-								placement="top"
-								overlay={popover}
-							>
-								<Button variant="success">
-									<i class="fas fa-user-edit"></i>
-								</Button>
-							</OverlayTrigger>
-						</td>
-						<td>
-							<OverlayTrigger
-								trigger="hover"
-								placement="top"
-								overlay={popoverB}
-							>
-								<Button variant="danger">
-									<i class="fas fa-user-minus"></i>
-								</Button>
-							</OverlayTrigger>
-						</td>
-						<td>
-							<AddMember />
-						</td>
-					</tr>
-					<tr>
-						<td>2</td>
-						<td>Dec 5, 2019</td>
-						<td>Orlando</td>
-						<td>Orlando</td>
-						<td>Bloom</td>
-						<td>Dec 1, 2019</td>
-						<td>2222222</td>
-						<td>orlando@bloom.com</td>
-						{/*crud*/}
-						<td>
-							<OverlayTrigger
-								trigger="hover"
-								placement="top"
-								overlay={popover}
-							>
-								<Button variant="success">
-									<i class="fas fa-user-edit"></i>
-								</Button>
-							</OverlayTrigger>
-						</td>
-						<td>
-							<OverlayTrigger
-								trigger="hover"
-								placement="top"
-								overlay={popoverB}
-							>
-								<Button variant="danger">
-									<i class="fas fa-user-minus"></i>
-								</Button>
-							</OverlayTrigger>
-						</td>
-						<td>
-							<AddMember />
-						</td>
-					</tr>
-					<tr>
-						<td>2</td>
-						<td>Dec 5, 2019</td>
-						<td>Orlando</td>
-						<td>Orlando</td>
-						<td>Bloom</td>
-						<td>Dec 1, 2019</td>
-						<td>2222222</td>
-						<td>orlando@bloom.com</td>
-						{/*crud*/}
-						<td>
-							<OverlayTrigger
-								trigger="hover"
-								placement="top"
-								overlay={popover}
-							>
-								<Button variant="success">
-									<i class="fas fa-user-edit"></i>
-								</Button>
-							</OverlayTrigger>
-						</td>
-						<td>
-							<OverlayTrigger
-								trigger="hover"
-								placement="top"
-								overlay={popoverB}
-							>
-								<Button variant="danger">
-									<i class="fas fa-user-minus"></i>
-								</Button>
-							</OverlayTrigger>
-						</td>
-						<td>
-							<AddMember />
-						</td>
-					</tr>
-					<tr>
-						<td>2</td>
-						<td>Dec 5, 2019</td>
-						<td>Orlando</td>
-						<td>Orlando</td>
-						<td>Bloom</td>
-						<td>Dec 1, 2019</td>
-						<td>2222222</td>
-						<td>orlando@bloom.com</td>
-						{/*crud*/}
-						<td>
-							<OverlayTrigger
-								trigger="hover"
-								placement="top"
-								overlay={popover}
-							>
-								<Button variant="success">
-									<i class="fas fa-user-edit"></i>
-								</Button>
-							</OverlayTrigger>
-						</td>
-						<td>
-							<OverlayTrigger
-								trigger="hover"
-								placement="top"
-								overlay={popoverB}
-							>
-								<Button variant="danger">
-									<i class="fas fa-user-minus"></i>
-								</Button>
-							</OverlayTrigger>
-						</td>
-						<td>
-							<AddMember />
-						</td>
-					</tr>
-					<tr>
-						<td>2</td>
-						<td>Dec 5, 2019</td>
-						<td>Orlando</td>
-						<td>Orlando</td>
-						<td>Bloom</td>
-						<td>Dec 1, 2019</td>
-						<td>2222222</td>
-						<td>orlando@bloom.com</td>
-						{/*crud*/}
-						<td>
-							<OverlayTrigger
-								trigger="hover"
-								placement="top"
-								overlay={popover}
-							>
-								<Button variant="success">
-									<i class="fas fa-user-edit"></i>
-								</Button>
-							</OverlayTrigger>
-						</td>
-						<td>
-							<OverlayTrigger
-								trigger="hover"
-								placement="top"
-								overlay={popoverB}
-							>
-								<Button variant="danger">
-									<i class="fas fa-user-minus"></i>
-								</Button>
-							</OverlayTrigger>
-						</td>
-						<td>
-							<AddMember />
-						</td>
-					</tr>
-					<tr>
-						<td>2</td>
-						<td>Dec 5, 2019</td>
-						<td>Orlando</td>
-						<td>Orlando</td>
-						<td>Bloom</td>
-						<td>Dec 1, 2019</td>
-						<td>2222222</td>
-						<td>orlando@bloom.com</td>
-						{/*crud*/}
-						<td>
-							<OverlayTrigger
-								trigger="hover"
-								placement="top"
-								overlay={popover}
-							>
-								<Button variant="success">
-									<i class="fas fa-user-edit"></i>
-								</Button>
-							</OverlayTrigger>
-						</td>
-						<td>
-							<OverlayTrigger
-								trigger="hover"
-								placement="top"
-								overlay={popoverB}
-							>
-								<Button variant="danger">
-									<i class="fas fa-user-minus"></i>
-								</Button>
-							</OverlayTrigger>
-						</td>
-						<td>
-							<AddMember />
-						</td>
-					</tr>
-					<tr>
-						<td>2</td>
-						<td>Dec 5, 2019</td>
-						<td>Orlando</td>
-						<td>Orlando</td>
-						<td>Bloom</td>
-						<td>Dec 1, 2019</td>
-						<td>2222222</td>
-						<td>orlando@bloom.com</td>
-						{/*crud*/}
-						<td>
-							<OverlayTrigger
-								trigger="hover"
-								placement="top"
-								overlay={popover}
-							>
-								<Button variant="success">
-									<i class="fas fa-user-edit"></i>
-								</Button>
-							</OverlayTrigger>
-						</td>
-						<td>
-							<OverlayTrigger
-								trigger="hover"
-								placement="top"
-								overlay={popoverB}
-							>
-								<Button variant="danger">
-									<i class="fas fa-user-minus"></i>
-								</Button>
-							</OverlayTrigger>
-						</td>
-						<td>
-							<AddMember />
-						</td>
-					</tr>
+								<td>
+									<OverlayTrigger
+										trigger="hover"
+										placement="top"
+										overlay={popover}
+									>
+										<Button variant="success">
+											<i class="fas fa-user-edit"></i>
+										</Button>
+									</OverlayTrigger>
+								</td>
+								<td>
+									<OverlayTrigger
+										trigger="hover"
+										placement="top"
+										overlay={popoverB}
+									>
+										<Button variant="danger">
+											<i class="fas fa-user-minus"></i>
+										</Button>
+									</OverlayTrigger>
+								</td>
+								<td>
+									<AddMember />
+								</td>
+							</tr>
+						);
+					})}
 				</tbody>
 			</Table>
 		</div>
 	);
 };
 
-export default MemberDatabase;
+export default compose(graphql(getMembersQuery, { name: "getMembersQuery" }))(
+	MemberDatabase
+);
