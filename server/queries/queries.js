@@ -3,6 +3,7 @@ const { GraphQLDate } = require("graphql-iso-date");
 //mongoose models
 
 const Member = require("../models/Member");
+const Coach = require("../models/Coach");
 
 const customScalarResolver = {
 	Date: GraphQLDate
@@ -24,12 +25,28 @@ const typeDefs = gql`
 		email: String
 	}
 
+	type CoachType { 
+
+		id: ID
+		nickName: String
+		firstName: String
+		lastName: String
+		birthday: Date
+		contact: BigInt
+	}
+
 	#query assignment
 
 	type Query {
 		getMembers: [MemberType]
 
 		getMember(id: ID): MemberType
+
+		getCoaches: [CoachType]
+
+		getCoach(id: ID): CoachType
+
+
 	}
 
 	type Mutation {
@@ -53,6 +70,32 @@ const typeDefs = gql`
 			contact: BigInt!
 			email: String!
 		): MemberType
+
+		deleteMember(id: String): Boolean
+
+		createCoach (
+			nickName: String!
+			firstName: String!
+			lastName: String!
+			birthday: Date!
+			contact: BigInt!
+
+		) : CoachType
+
+		updateCoach(
+
+			id: ID!
+			nickName: String!
+			firstName: String!
+			lastName: String!
+			birthday: Date!
+			contact: BigInt!
+
+		): CoachType
+
+		deleteCoach(id: String): Boolean
+
+
 	}
 `;
 
@@ -65,7 +108,22 @@ const resolvers = {
 		getMember: (parent, args) => {
 			console.log(args.id);
 			return Member.findById(args.id);
+		}, 
+
+
+		getCoaches: () => { 
+
+			return Coach.find({});
+
+		}, 
+
+
+		getCoach: (_,args) => { 
+			console.log(args.id)
+			return Coach.findById(args.id);
+
 		}
+
 	},
 
 	Mutation: {
@@ -100,6 +158,71 @@ const resolvers = {
 			};
 
 			return Member.findOneAndUpdate(condition, update);
+		}, 
+
+		deleteMember: (_, args) => {
+			console.log(args.id);
+
+			let condition = args.id;
+
+			//first parameter (what is the condition? , callBack Function)
+			return Member.findByIdAndDelete(condition, (err, member) => {
+				console.log(err);
+				console.log(member);
+
+				if (err || !member) {
+					console.log("delete failed. no user found");
+					return false;
+				}
+				console.log("user deleted");
+			});
+		}, 
+
+		createCoach: (_, args) => {
+			console.log(args);
+
+			let newCoach = Coach({
+				nickName: args.nickName,
+				firstName: args.firstName,
+				lastName: args.lastName,
+				birthday: args.birthday,
+				contact: args.contact
+			});
+
+			console.log(newCoach);
+			return newCoach.save();
+		},
+
+		updateCoach: (_, args) => {
+			console.log(args);
+			let condition = { _id: args.id };
+			let update = {
+				nickName: args.nickName,
+				firstName: args.firstName,
+				lastName: args.lastName,
+				birthday: args.birthday,
+				contact: args.contact
+			};
+
+			return Coach.findOneAndUpdate(condition, update);
+		}, 
+
+		deleteCoach: (_, args) => {
+			console.log(args.id);
+
+			let condition = args.id;
+
+			//first parameter (what is the condition? , callBack Function)
+			return Coach.findByIdAndDelete(condition, (err, member) => {
+				console.log(err);
+				console.log(Coach);
+
+				if (err || !Coach) {
+					console.log("delete failed. no user found");
+					return false;
+				}
+				console.log("coach user deleted");
+			});
 		}
 	}
 };
