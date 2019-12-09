@@ -74,7 +74,7 @@ const MemberDatabase = props => {
 										overlay={popover}
 									>
 										<Button variant="success">
-											<i class="fas fa-user-edit"></i>
+											<i className="fas fa-user-edit"></i>
 										</Button>
 									</OverlayTrigger>
 								</td>
@@ -85,7 +85,7 @@ const MemberDatabase = props => {
 										overlay={popoverB}
 									>
 										<Button variant="danger">
-											<i class="fas fa-user-minus"></i>
+											<i className="fas fa-user-minus"></i>
 										</Button>
 									</OverlayTrigger>
 								</td>

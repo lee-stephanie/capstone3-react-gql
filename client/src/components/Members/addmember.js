@@ -8,6 +8,9 @@ import {
 	Popover,
 	OverlayTrigger
 } from "react-bootstrap";
+
+import { toBase64, nodeServer } from "../../function.js";
+
 //lodash to use compose
 
 import { flowRight as compose } from "lodash";
@@ -102,6 +105,23 @@ const AddMember = props => {
 		setContact(e.target.value);
 	};
 
+	//photo
+
+	const [imagePath, setImagePath] = useState("");
+	const fileRef = React.createRef();
+	console.log(fileRef);
+
+	const imagePathHandler = e => {
+		/*console.log(fileRef.current.files[0]);*/
+		toBase64(fileRef.current.files[0]).then(encodedFile => {
+			console.log(encodedFile);
+			setImagePath(encodedFile);
+		});
+	};
+
+	//add a new key-value pair field for newMember. Create a key imageLocation
+	//and assign the value of the imagePath state as its value.
+
 	//addmember
 
 	const addMember = e => {
@@ -116,10 +136,11 @@ const AddMember = props => {
 			lastName: lastName,
 			birthday: bday,
 			contact: contact,
-			email: email
+			email: email,
+			imageLocation: imagePath
 		};
 
-		console.log(newMember);
+		console.log(newMember.imagePath);
 
 		props.createMemberMutation({
 			variables: newMember,
@@ -152,10 +173,19 @@ const AddMember = props => {
 				</Modal.Header>
 				<Modal.Body>
 					<Form onSubmit={addMember}>
+						<Form.Group controlId="profilepic">
+							<Form.Label>Photo</Form.Label>
+							<Form.Control
+								type="file"
+								accept="image/jpg"
+								ref={fileRef}
+								onChange={imagePathHandler}
+							/>
+						</Form.Group>
+
 						<Form.Group controlId="lname">
 							<Form.Label>Membership Date</Form.Label>
 							<Form.Control
-								id="memberSince"
 								type="date"
 								onChange={memberSinceChangeHandler}
 								value={memberSince}
@@ -166,7 +196,6 @@ const AddMember = props => {
 								<Form.Group controlId="lname">
 									<Form.Label>Last Name</Form.Label>
 									<Form.Control
-										id="lname"
 										type="text"
 										onChange={lnameChangeHandler}
 										value={lastName}
@@ -177,7 +206,6 @@ const AddMember = props => {
 								<Form.Group controlId="fname">
 									<Form.Label>First Name</Form.Label>
 									<Form.Control
-										id="fname"
 										type="text"
 										onChange={fnameChangeHandler}
 										value={firstName}
@@ -189,7 +217,6 @@ const AddMember = props => {
 							<Form.Group as={Col} controlId="nick">
 								<Form.Label>Nickname</Form.Label>
 								<Form.Control
-									id="nick"
 									type="text"
 									onChange={nickChangeHandler}
 									value={nickName}
@@ -198,7 +225,6 @@ const AddMember = props => {
 							<Form.Group controlId="bday">
 								<Form.Label>Birthday</Form.Label>
 								<Form.Control
-									id="bday"
 									type="date"
 									placeholder="MM/DD/YY"
 									onChange={bdayChangeHandler}
@@ -210,7 +236,6 @@ const AddMember = props => {
 						<Form.Group controlId="email">
 							<Form.Label>Email</Form.Label>
 							<Form.Control
-								id="email"
 								type="email"
 								onChange={emailChangeHandler}
 								value={email}
@@ -219,7 +244,6 @@ const AddMember = props => {
 						<Form.Group controlId="contact">
 							<Form.Label>Contact No.</Form.Label>
 							<Form.Control
-								id="contact"
 								type="text"
 								onChange={contactChangeHandler}
 								value={contact}

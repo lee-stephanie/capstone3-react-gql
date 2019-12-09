@@ -9,6 +9,8 @@ const createMemberMutation = gql`
     $birthday: Date!
     $contact: BigInt!
     $email: String!
+    $imageLocation: String
+    $roleId: String
   ) {
     createMember(
       memberSince: $memberSince
@@ -18,6 +20,8 @@ const createMemberMutation = gql`
       birthday: $birthday
       contact: $contact
       email: $email
+      imageLocation: $imageLocation
+      roleId: $roleId
     ) {
       id
       memberSince
@@ -27,15 +31,14 @@ const createMemberMutation = gql`
       birthday
       contact
       email
+      imageLocation
+      roleId
     }
   }
 `;
 
-
 const updateMemberMutation = gql`
-
-  mutation 
-   (
+  mutation(
     $memberSince: Date!
     $nickName: String!
     $firstName: String!
@@ -44,7 +47,7 @@ const updateMemberMutation = gql`
     $contact: BigInt!
     $email: String!
   ) {
-     updateMember(
+    updateMember(
       memberSince: $memberSince
       nickName: $nickName
       firstName: $firstName
@@ -62,8 +65,7 @@ const updateMemberMutation = gql`
       contact
       email
     }
-
-}
+  }
 `;
 
 const deleteMemberMutation = gql`
@@ -71,7 +73,5 @@ const deleteMemberMutation = gql`
     deleteMember(id: $id)
   }
 `;
-
-
 
 export { createMemberMutation, updateMemberMutation, deleteMemberMutation };
