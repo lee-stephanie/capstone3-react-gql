@@ -9,8 +9,7 @@ const createMemberMutation = gql`
     $birthday: Date!
     $contact: BigInt!
     $email: String!
-    $imageLocation: String
-    $roleId: String
+
   ) {
     createMember(
       memberSince: $memberSince
@@ -20,8 +19,7 @@ const createMemberMutation = gql`
       birthday: $birthday
       contact: $contact
       email: $email
-      imageLocation: $imageLocation
-      roleId: $roleId
+
     ) {
       id
       memberSince
@@ -31,8 +29,7 @@ const createMemberMutation = gql`
       birthday
       contact
       email
-      imageLocation
-      roleId
+
     }
   }
 `;
@@ -74,4 +71,59 @@ const deleteMemberMutation = gql`
   }
 `;
 
-export { createMemberMutation, updateMemberMutation, deleteMemberMutation };
+
+const createCoachMutation = gql`
+  mutation(
+
+    $firstName: String!
+    $lastName: String!
+    $contact: BigInt!
+
+
+  ) {
+    createCoach(
+    firstName:$firstName
+    lastName: $lastName
+    contact: $contact
+
+    ) {
+    
+      firstName
+      lastName     
+      contact
+   
+
+    }
+  }
+`;
+
+const updateCoachMutation = gql`
+  mutation(
+    $firstName: String!
+    $lastName: String!
+    $contact: BigInt!
+
+
+  ) {
+    updateCoach(
+      firstName: $firstName
+      lastName: $lastName
+      contact: $contact
+
+    ) {
+      firstName
+      lastName
+      contact
+    }
+  }
+`;
+
+const deleteCoachMutation = gql`
+  mutation($id: String!) {
+    deleteCoach(id: $id)
+  }
+`;
+
+
+export { createMemberMutation, updateMemberMutation, deleteMemberMutation, createCoachMutation, deleteCoachMutation, updateCoachMutation
+ };

@@ -36,12 +36,9 @@ const sessionSchema = new Schema({
 	price: {
 		type: Number,
 		required: true
-	},
-
-	priceTotal: {
-		type: Number,
-		required: true
 	}
+
+
 });
 
 module.exports = mongoose.model("Session", sessionSchema);

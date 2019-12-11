@@ -7,17 +7,13 @@ const martialartSchema = new Schema(
 		martialArt: {
 			type: String,
 			required: true
-		},
-
-		price: {
-			type: Number,
-			required: true
-		},
-
-		roleId: {
+		}, 
+		
+		coachId: {
 			type: String,
 			required: true
 		}
+
 	},
 
 	{
@@ -25,4 +21,4 @@ const martialartSchema = new Schema(
 	}
 );
 
-module.exports = mongoose.model("MartialArt", martialartSchema);
+module.exports = mongoose.model("martialArt", martialartSchema);

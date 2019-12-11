@@ -9,7 +9,6 @@ import {
 	OverlayTrigger
 } from "react-bootstrap";
 
-import { toBase64, nodeServer } from "../../function.js";
 
 //lodash to use compose
 
@@ -105,22 +104,8 @@ const AddMember = props => {
 		setContact(e.target.value);
 	};
 
-	//photo
 
-	const [imagePath, setImagePath] = useState("");
-	const fileRef = React.createRef();
-	console.log(fileRef);
 
-	const imagePathHandler = e => {
-		/*console.log(fileRef.current.files[0]);*/
-		toBase64(fileRef.current.files[0]).then(encodedFile => {
-			console.log(encodedFile);
-			setImagePath(encodedFile);
-		});
-	};
-
-	//add a new key-value pair field for newMember. Create a key imageLocation
-	//and assign the value of the imagePath state as its value.
 
 	//addmember
 
@@ -137,10 +122,10 @@ const AddMember = props => {
 			birthday: bday,
 			contact: contact,
 			email: email,
-			imageLocation: imagePath
+		
 		};
 
-		console.log(newMember.imagePath);
+		
 
 		props.createMemberMutation({
 			variables: newMember,
@@ -159,6 +144,7 @@ const AddMember = props => {
 		setContact("");
 	};
 
+
 	return (
 		<Container>
 			<OverlayTrigger trigger="hover" placement="top" overlay={popover1}>
@@ -173,15 +159,7 @@ const AddMember = props => {
 				</Modal.Header>
 				<Modal.Body>
 					<Form onSubmit={addMember}>
-						<Form.Group controlId="profilepic">
-							<Form.Label>Photo</Form.Label>
-							<Form.Control
-								type="file"
-								accept="image/jpg"
-								ref={fileRef}
-								onChange={imagePathHandler}
-							/>
-						</Form.Group>
+						
 
 						<Form.Group controlId="lname">
 							<Form.Label>Membership Date</Form.Label>

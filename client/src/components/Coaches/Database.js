@@ -6,7 +6,7 @@ import { Table,
 	Form,
 	Col,
 	Container,
-	Modal,
+	Modal
 
 
  } from "react-bootstrap";
@@ -22,11 +22,11 @@ import { flowRight as compose } from "lodash";
 import { graphql } from "react-apollo";
 
 //import the query
-import { getMembersQuery, getMemberQuery } from "../../queries/queries";
+import { getCoachesQuery, getCoachQuery } from "../../queries/queries";
 
 //import the mutation 
-import { updateMemberMutation } from "../../queries/mutation";
-import {deleteMemberMutation} from "../../queries/mutation";
+import {updateCoachMutation } from "../../queries/mutation";
+import {deleteCoachMutation} from "../../queries/mutation";
 
 
 
@@ -40,15 +40,15 @@ const popoverB = (
 	</Popover>
 );
 
-const MemberDatabase = props => {
+const CoachDatabase = props => {
 		console.log(props);
 
 	//retrieve the data
-	const memberData = props.getMembersQuery.getMembers
-		? props.getMembersQuery.getMembers
+	const memberData = props.getCoachesQuery.getCoaches
+		? props.getCoachesQuery.getCoaches
 		: [];
 
-	if (props.getMembersQuery.loading) {
+	if (props.getCoachesQuery.loading) {
 			let timerInterval;
 			Swal.fire({
 				title: "Fetching members...",
@@ -70,8 +70,8 @@ const MemberDatabase = props => {
 			});
 		}
 
-	const deleteMemberHandler = e => {
-		console.log("deleting a member...");
+	const deleteCoachHandler = e => {
+		console.log("deleting a coach...");
 		console.log(e.target.id);
 		let id = e.target.id;
 
@@ -84,11 +84,11 @@ const MemberDatabase = props => {
 			confirmButtonText: "Yes, delete it!"
 		}).then(result => {
 			if (result.value) {
-				props.deleteMemberMutation({
+				props.deleteCoachMutation({
 					variables: { id: id },
 					refetchQueries: [
 						{
-							query: getMembersQuery
+							query: getCoachesQuery
 						}
 					]
 				});
@@ -105,10 +105,10 @@ const MemberDatabase = props => {
 
 	//update
 
-	let member = props.getMemberQuery.getMember
-		? props.getMemberQuery.getMember
+	let coach = props.getCoachesQuery.getCoach
+		? props.getCoachesQuery.getCoach
 		: {};
-	console.log(member);
+	console.log(coach);
 
 	//hooks for modal close and show
 	const [show, setShow] = useState(false);
@@ -118,23 +118,13 @@ const MemberDatabase = props => {
 	//useEffect for hooks to about delay
 
 	useEffect(() => {
-		console.log("membership date :" + memberSince);
 		console.log("firstName :" + firstName);
 		console.log("lastName :" + lastName);
-		console.log("nickName :" + nickName);
-		console.log("setbday :" + bday);
 		console.log("contact :" + contact);
 	});
 
 	//hooks for input fields data.
 
-	//membership date
-	const [memberSince, setMemberSince] = useState("");
-
-	const memberSinceChangeHandler = e => {
-		console.log(e.target.value);
-		setMemberSince(e.target.value);
-	};
 
 	//firstName
 	const [firstName, setFirstName] = useState("");
@@ -151,29 +141,6 @@ const MemberDatabase = props => {
 		setLastName(e.target.value);
 	};
 
-	//nickName
-
-	const [nickName, setnickName] = useState("");
-	const nickChangeHandler = e => {
-		console.log(e.target.value);
-		setnickName(e.target.value);
-	};
-
-	//bday
-
-	const [bday, setbday] = useState("");
-	const bdayChangeHandler = e => {
-		console.log(e.target.value);
-		setbday(e.target.value);
-	};
-
-	//email
-
-	const [email, setEmail] = useState("");
-	const emailChangeHandler = e => {
-		console.log(e.target.value);
-		setEmail(e.target.value);
-	};
 
 	//contact
 
@@ -197,16 +164,11 @@ const MemberDatabase = props => {
 	// 	};
 	// }
 
-			if (!props.getMemberQuery.loading) {
+	if (!props.getCoachesQuery.loading) {
 		const setDefaultValues = () => {
-			console.log(member.teamId);
-			setMemberSince(member.MemberSince);
-			setnickName(member.nickName);
-			setFirstName(member.firstName);
-			setLastName(member.lastName);
-			setEmail(member.email);
-			setbday(member.bday);
-			setContact(member.contact);
+			setFirstName(coach.firstName);
+			setLastName(coach.lastName);
+			setContact(coach.contact);
 		};
 	}
 //effects 
@@ -214,38 +176,34 @@ const MemberDatabase = props => {
 const popover = (
 	<Popover id="popover-basic">
 		<Popover.Content>
-			<strong>Update Member</strong>
+			<strong>Update Coach</strong>
 		</Popover.Content>
 	</Popover>
 );
-	const updateMember = e => {
+	const updateCoach = e => {
 		e.preventDefault();
 
 		//register to system
 
-		let updatedMember = {
+		let updatedCoach = {
 			id: props.match.params.id,
-			memberSince: memberSince,
-			nickName: nickName,
 			firstName: firstName,
 			lastName: lastName,
-			birthday: bday,
 			contact: contact,
-			email: email,
-		
+	
 		};
 
 		
 
-			props.updateMemberMutation({
-				variables: updatedMember
+			props.updateCoachMutation({
+				variables: updatedCoach
 			}).then(res => {
 				console.log(res);
 			});
 
 			Swal.fire({
-			title: "member updated",
-			text: "member has been updated",
+			title: "coach updated",
+			text: "coach has been updated",
 			type: "success",
 
 			// first approach
@@ -261,37 +219,25 @@ const popover = (
 	};
 
 
-
-
 	return (
 		<div>
 			<Table striped borderless hover responsive="sm" variant="dark">
 				<thead>
 					<tr>
-						<th>#</th>
-						<th>Member Since</th>
-						<th>Nickname</th>
 						<th>First Name</th>
 						<th>Last Name</th>
-						<th>Birthday</th>
 						<th>Contact No.</th>
-						<th>E-mail</th>
 						<th colspan="3">Actions</th>
 					</tr>
 				</thead>
 				<tbody>
-					{memberData.map(member => {
+					{memberData.map(coach => {
 						/*	console.log(member.birthday);*/
 						return (
-							<tr key="member.id">
-								<td>2</td>
-								<td>{member.memberSince}</td>
-								<td>{member.nickName}</td>
-								<td>{member.firstName}</td>
-								<td>{member.lastName}</td>
-								<td>{member.birthday}</td>
-								<td>{member.contact}</td>
-								<td>{member.email}</td>
+							<tr key="coach.id">
+								<td>{coach.firstName}</td>
+								<td>{coach.lastName}</td>
+								<td>{coach.contact}</td>
 
 								<td>
 								<Container>
@@ -307,20 +253,12 @@ const popover = (
 
 			<Modal show={show} onHide={handleClose}>
 				<Modal.Header closeButton>
-					<Modal.Title>Update Member Form</Modal.Title>
+					<Modal.Title>Update Coach Form</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					<Form key={member.id} onSubmit={updateMember}>
+					<Form key={coach.id} onSubmit={updateCoach}>
 						
 
-						<Form.Group controlId="lname">
-							<Form.Label>Membership Date</Form.Label>
-							<Form.Control
-								type="date"
-								onChange={memberSinceChangeHandler}
-								value={memberSince}
-							/>
-						</Form.Group>
 						<Form.Row>
 							<Col md={4}>
 								<Form.Group controlId="lname">
@@ -343,34 +281,7 @@ const popover = (
 								</Form.Group>
 							</Col>
 						</Form.Row>
-						<Form.Row>
-							<Form.Group as={Col} controlId="nick">
-								<Form.Label>Nickname</Form.Label>
-								<Form.Control
-									type="text"
-									onChange={nickChangeHandler}
-									value={nickName}
-								/>
-							</Form.Group>
-							<Form.Group controlId="bday">
-								<Form.Label>Birthday</Form.Label>
-								<Form.Control
-									type="date"
-									placeholder="MM/DD/YY"
-									onChange={bdayChangeHandler}
-									value={bday}
-								/>
-							</Form.Group>
-						</Form.Row>
 
-						<Form.Group controlId="email">
-							<Form.Label>Email</Form.Label>
-							<Form.Control
-								type="email"
-								onChange={emailChangeHandler}
-								value={email}
-							/>
-						</Form.Group>
 						<Form.Group controlId="contact">
 							<Form.Label>Contact No.</Form.Label>
 							<Form.Control
@@ -380,12 +291,6 @@ const popover = (
 							/>
 						</Form.Group>
 
-						{/*			<Form.Group id="formGridCheckbox">
-							<Form.Check
-								type="checkbox"
-								label="I hereby allow Valiant MMA & Fitness Gym to record my data for membership purposes."
-							/>
-						</Form.Group>*/}
 
 						<Button variant="primary" type="submit">
 							Submit
@@ -406,7 +311,7 @@ const popover = (
 										placement="top"
 										overlay={popoverB}
 									>
-										<Button variant="danger" onClick={deleteMemberHandler} id={member.id}>
+										<Button variant="danger" onClick={deleteCoachHandler} id={coach.id}>
 											<i className="fas fa-user-minus"></i>
 										</Button>
 									</OverlayTrigger>
@@ -424,10 +329,10 @@ const popover = (
 };
 
 export default compose(
-	graphql(getMembersQuery, { name: "getMembersQuery" }),
-	graphql(deleteMemberMutation, { name: "deleteMemberMutation" }), 
-	graphql(updateMemberMutation, { name: "updateMemberMutation" }),
-	graphql(getMemberQuery, {
+	graphql(getCoachesQuery, { name: "getCoachesQuery" }),
+	graphql(deleteCoachMutation, { name: "deleteCoachMutation" }), 
+	graphql(updateCoachMutation, { name: "updateCoachMutation" }),
+/*	graphql(getCoachQuery, {
 		options: props => {
 			// retrieve the wildcard id param
 			console.log(props.match.params.id);
@@ -437,9 +342,9 @@ export default compose(
 				}
 			};
 		},
-		name: "getMemberQuery"
-	})
+		name: "getCoachQuery"
+	})*/
 
 
 	)(
-	MemberDatabase);
+	CoachDatabase);

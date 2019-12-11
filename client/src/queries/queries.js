@@ -40,4 +40,57 @@ const getMembersQuery = gql`
   }
 `;
 
-export { getMembersQuery };
+
+const getMemberQuery = gql`
+  query($id: ID!) {
+    getMember(id: $id) {
+      id
+      memberSince
+      nickName
+      firstName
+      lastName
+      birthday
+      contact
+      email
+    }
+  }
+`;
+
+
+const getCoachesQuery = gql`
+{
+  
+  getCoaches {
+    
+    id
+    firstName
+    lastName
+    contact    
+
+
+    
+  }
+
+}
+`;
+
+const getCoachQuery = gql`
+  query($id: ID!) {
+    getCoach(id: $id)  {
+  
+      id
+      firstName
+      lastName
+      contact
+
+}
+
+  }
+`;
+
+export { 
+  getMembersQuery, 
+  getMemberQuery, 
+  getCoachesQuery,
+  getCoachQuery
+  };

@@ -19,6 +19,9 @@ import Header from "./components/Header.js";
 import Main from "./components/Main.js";
 import AddMember from "./components/Members/addmember.js";
 import MemberDatabase from "./components/Members/Database.js";
+import CoachDatabase from "./components/Coaches/Database.js";
+
+
 
 const client = new ApolloClient({ uri: "http://localhost:5000/graphql" });
 
@@ -34,6 +37,8 @@ function App() {
 							<Route exact path="/" component={MemberDatabase} />
 							<Route path="/main" component={Main} />
 							<Route path="/addmember" component={AddMember} />
+							<Route path="/member/update/:id" component={MemberDatabase} />
+							<Route path="/CoachDatabase" component={CoachDatabase} />
 						</Container>
 					</div>
 				</Switch>

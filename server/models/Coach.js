@@ -5,11 +5,6 @@ const Schema = mongoose.Schema;
 const coachSchema = new Schema (
 	{
 
-		nickName: {
-			type: String,
-			required: true
-		},
-
 		firstName: {
 			type: String,
 			required: true
@@ -20,15 +15,12 @@ const coachSchema = new Schema (
 			required: true
 		},
 
-		birthday: {
-			type: Date,
-			required: true
-		},
-
 		contact: {
 			type: Number,
 			required: true
-		}
+		}, 
+
+
 	},
 
 		{

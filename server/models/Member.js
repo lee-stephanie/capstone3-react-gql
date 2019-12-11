@@ -36,17 +36,10 @@ const memberSchema = new Schema(
 		email: {
 			type: String,
 			required: true
-		},
-
-		roleId: {
-			type: String,
-			required: true
-		},
-
-		imageLocation: {
-			type: String,
-			required: true
 		}
+	
+
+
 	},
 
 	{

@@ -4,6 +4,8 @@ const { GraphQLDate } = require("graphql-iso-date");
 
 const Member = require("../models/Member");
 const Coach = require("../models/Coach");
+const martialArt = require("../models/MartialArt");
+const Session = require("../models/Session");
 
 const customScalarResolver = {
 	Date: GraphQLDate
@@ -23,29 +25,24 @@ const typeDefs = gql`
 		birthday: Date
 		contact: BigInt
 		email: String
-		imageLocation: String
-		roleId: [RoleType]
+
 	}
+
 
 	type CoachType {
 		id: ID
-		nickName: String
 		firstName: String
 		lastName: String
-		birthday: Date
 		contact: BigInt
+
 	}
 
-	type RoleType {
-		id: ID
-		role: String
-	}
-
-	type MartialArtType {
+	type MartialartType {
 		id: ID
 		martialArt: String
-		price: Float
-		roleId: [RoleType]
+		coachId: String
+		coaches: [CoachType]
+
 	}
 
 	type SessionType {
@@ -53,7 +50,7 @@ const typeDefs = gql`
 		memberId: String
 		coachId: String
 		SessionDate: Date
-		martialartId: String
+		martialArtId: String
 		sessionNo: Int
 		sessionTotal: Float
 		price: Float
@@ -65,21 +62,17 @@ const typeDefs = gql`
 	type Query {
 		getMembers: [MemberType]
 
-		getMember(id: ID): [MemberType]
+		getMember(id: ID!): MemberType
 
 		getCoaches: [CoachType]
 
-		getCoach(id: ID): [CoachType]
+		getCoach(id: ID!): CoachType
 
-		getMartialArt(id: ID): [MartialArtType]
+		getMartialart(id: ID!): MartialartType
 
-		getMartialArts: [MemberType]
+		getMartialarts: [MartialartType]
 
-		getRole(id: ID): [RoleType]
-
-		getRoles: [RoleType]
-
-		getSession(id: ID): [SessionType]
+		getSession(id: ID): SessionType
 
 		getSessions: [SessionType]
 	}
@@ -93,8 +86,7 @@ const typeDefs = gql`
 			birthday: Date!
 			contact: BigInt!
 			email: String!
-			imageLocation: String!
-			roleId: String!
+		
 		): MemberType
 
 		updateMember(
@@ -106,30 +98,65 @@ const typeDefs = gql`
 			birthday: Date!
 			contact: BigInt!
 			email: String!
-			imageLocation: String!
-			roleId: String!
+		
 		): MemberType
 
 		deleteMember(id: String): Boolean
 
 		createCoach(
-			nickName: String!
 			firstName: String!
 			lastName: String!
-			birthday: Date!
 			contact: BigInt!
+	
 		): CoachType
 
 		updateCoach(
 			id: ID!
-			nickName: String!
 			firstName: String!
 			lastName: String!
-			birthday: Date!
 			contact: BigInt!
+		
 		): CoachType
 
 		deleteCoach(id: String): Boolean
+
+		createMartialart(
+			martialArt: String
+			coachId: String
+		) : MartialartType
+
+		updateMartialart( 
+			id: ID
+			martialArt: String
+			coachId: String
+		): MartialartType
+
+		deleteMartialart(id:String): Boolean
+
+		createSession(
+			memberId: String
+			coachId: String
+			SessionDate: Date
+			martialartId: String
+			sessionNo: Int
+			sessionTotal: Float
+			price: Float
+
+		): SessionType
+
+
+		updateSession(
+			memberId: String
+			coachId: String
+			SessionDate: Date
+			martialartId: String
+			sessionNo: Int
+			sessionTotal: Float
+			price: Float
+
+		): SessionType
+
+		deleteSession(id:String): Boolean
 	}
 `;
 
@@ -140,6 +167,7 @@ const resolvers = {
 		},
 
 		getMember: (parent, args) => {
+			console.log("nakuha mo");
 			console.log(args.id);
 			return Member.findById(args.id);
 		},
@@ -149,23 +177,39 @@ const resolvers = {
 		},
 
 		getCoach: (_, args) => {
+
 			console.log(args.id);
 			return Coach.findById(args.id);
+		},
+
+
+		getMartialarts: (parent,args) => { 
+
+			return martialArt.find({});
+		}, 
+
+		getMartialart: () => { 
+
+			return martialArt.findById(args.id);
+		},
+
+		getSessions: () => {
+			return Session.find({});
+		},
+
+		getSession: () => {
+			return Session.findById(args.id);
 		}
+
+
 	},
 
 	Mutation: {
 		createMember: (_, args) => {
 			console.log("creating member...");
-			console.log(args.imageLocation);
 
-			//assign the variable imageString to the value of the encoded file
-			let imageString = args.imageLocation;
 
-			//in order to decode the encoded data we need to remove the text
-			//before the encoded string. we need to remove data: image/png;base64,
-			let imageBase = imageString.split(";base64,").pop();
-			console.log(imageBase);
+
 
 			let newMember = Member({
 				memberSince: args.memberSince,
@@ -175,7 +219,7 @@ const resolvers = {
 				birthday: args.birthday,
 				contact: args.contact,
 				email: args.email,
-				imageLocation: args.imageLocation
+		
 			});
 
 			console.log(newMember);
@@ -193,7 +237,7 @@ const resolvers = {
 				birthday: args.birthday,
 				contact: args.contact,
 				email: args.email,
-				imageLocation: args.imageLocation
+		
 			};
 
 			return Member.findOneAndUpdate(condition, update);
@@ -221,11 +265,11 @@ const resolvers = {
 			console.log(args);
 
 			let newCoach = Coach({
-				nickName: args.nickName,
+		
 				firstName: args.firstName,
 				lastName: args.lastName,
-				birthday: args.birthday,
-				contact: args.contact
+				contact: args.contact,
+			
 			});
 
 			console.log(newCoach);
@@ -236,11 +280,11 @@ const resolvers = {
 			console.log(args);
 			let condition = { _id: args.id };
 			let update = {
-				nickName: args.nickName,
+			
 				firstName: args.firstName,
 				lastName: args.lastName,
-				birthday: args.birthday,
-				contact: args.contact
+				contact: args.contact,
+				
 			};
 
 			return Coach.findOneAndUpdate(condition, update);
@@ -252,7 +296,7 @@ const resolvers = {
 			let condition = args.id;
 
 			//first parameter (what is the condition? , callBack Function)
-			return Coach.findByIdAndDelete(condition, (err, member) => {
+			return Coach.findByIdAndDelete(condition, (err, coach) => {
 				console.log(err);
 				console.log(Coach);
 
@@ -262,8 +306,136 @@ const resolvers = {
 				}
 				console.log("coach user deleted");
 			});
+		}, 
+	
+		createMartialart: (_, args) => {
+			console.log(args);
+
+			let newmartialArt = martialArt({
+		
+				martialArt: args.martialArt,
+				coachId: args.coachId
+		
+			});
+
+			console.log(newmartialArt);
+			return newmartialArt.save();
+		},
+
+		updateMartialart:(_,args)=> { 
+			console.log(args);
+			let condition = {_id: args.id};
+			let update = { 
+					martialArt: args.martialArt,
+					coachId: args.coachId
+
+			};
+
+			return martialArt.findOneAndUpdate(condition,update);
+
+		},
+
+		deleteMartialart: (_, args) => {
+			console.log(args.id);
+
+			let condition = args.id;
+
+			//first parameter (what is the condition? , callBack Function)
+			return martialArt.findByIdAndDelete(condition, (err, martialArt) => {
+				console.log(err);
+				console.log(martialArt);
+
+				if (err || !martialArt) {
+					console.log("delete failed. no user found");
+					return false;
+				}
+
+				console.log("martialArt deleted");
+			});
+		}, 
+
+		createSession: (_, args) => {
+			console.log(args);
+
+			let newSession = Session({
+		
+				memberId: args.memberId,
+				coachId: args.coachId,
+				SessionDate: args.SessionDate,
+				martialArtId: args.martialArtId,
+				sessionNo: args.sessionNo,
+				sessionTotal: args.sessionTotal,
+				price: args.price	
+			});
+
+			console.log(newSession);
+			return newSession.save();
+		},
+
+		updateSession:(_,args)=> { 
+			console.log(args);
+			let update = { 
+				memberId: args.memberId,
+				coachId: args.coachId,
+				SessionDate: args.SessionDate,
+				martialArtId: args.martialArtId,
+				sessionNo: args.sessionNo,
+				sessionTotal: args.sessionTotal,
+				price: args.price
+
+			};
+
+			return Session.findOneAndUpdate(condition,update);
+
+
+		}, 
+
+		deleteSession: (_, args) => {
+			console.log(args.id);
+
+			let condition = args.id;
+
+			//first parameter (what is the condition? , callBack Function)
+			return Session.findByIdAndDelete(condition, (err, session) => {
+				console.log(err);
+				console.log(Session);
+
+				if (err || !Session) {
+					console.log("delete failed. no user found");
+					return false;
+				}
+
+				console.log("Session deleted");
+			});
 		}
-	}
+
+
+		
+
+
+
+	},
+
+	MartialartType: {
+		coaches: (parent, args) => {
+			console.log("retrieving coach details");
+			console.log(parent);
+
+			return Coach.find({ _id: parent.coachId });
+		}
+	}, 
+
+/*	CoachType: { 
+		Specialty: (parent, args) => { 
+			console.log("retrieving martial art details");
+			console.log(parent)
+
+			return martialArt.find({ _id: parent.martialArtId });
+
+		}
+
+	}*/
+
 };
 
 //server

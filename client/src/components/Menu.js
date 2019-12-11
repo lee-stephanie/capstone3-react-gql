@@ -13,39 +13,16 @@ const Menu = props => {
 				</Nav>
 				<Nav>
 					<NavDropdown title="Member" id="collasible-nav-dropdown">
-						<NavDropdown.Item href="/MemberDatabase">
+						<NavDropdown.Item href="/">
 							Database
-						</NavDropdown.Item>
-						<NavDropdown.Divider />
-						<NavDropdown.Item href="/addmember">
-							Add Member
-						</NavDropdown.Item>
-						<NavDropdown.Item href="#action/3.1">
-							Update Member
-						</NavDropdown.Item>
-						<NavDropdown.Item href="#action/3.1">
-							Delete Member
 						</NavDropdown.Item>
 					</NavDropdown>
 					<NavDropdown title="Coach" id="collasible-nav-dropdown">
-						<NavDropdown.Item href="#action/3.1">
+						<NavDropdown.Item href="/CoachDatabase">
 							Database
 						</NavDropdown.Item>
-						<NavDropdown.Divider />
-						<NavDropdown.Item href="#action/3.1">
-							Add Coach
-						</NavDropdown.Item>
-						<NavDropdown.Item href="#action/3.1">
-							Update Coach
-						</NavDropdown.Item>
-						<NavDropdown.Item href="#action/3.1">
-							Delete Coach
-						</NavDropdown.Item>
 					</NavDropdown>
-					<Nav.Link href="#deets">Logout</Nav.Link>
-					<Nav.Link eventKey={2} href="#memes">
-						Hi, username!
-					</Nav.Link>
+
 				</Nav>
 			</Navbar.Collapse>
 		</Navbar>
